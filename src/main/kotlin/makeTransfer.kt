@@ -28,10 +28,10 @@ fun makeTransfer(fromId: Int, toId: Int, amount: BigDecimal): Result {
     val firstLock = Locks.getLock(seq.first)
     firstLock.lock()
     try {
-        if (from.amount < toTransfer) return Result(false, "Insufficient money amount on 'from' user")
         val secondLock = Locks.getLock(seq.second)
         secondLock.lock()
         try {
+            if (from.amount < toTransfer) return Result(false, "Insufficient money amount on 'from' user")
             val newFrom = from.amount.subtract(toTransfer)
             var r = db.updateUserAcc(from.id, newFrom)
             if (r <= 0) return Result(false, "Failed to update 'from' user")
